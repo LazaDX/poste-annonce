@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admin extends Model
+class Image extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'fisrt_name',
-        'last_name',
-        'email',
-        'password',
+        'image_path'
     ];
+    
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
 }
