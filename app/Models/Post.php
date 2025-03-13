@@ -26,7 +26,7 @@ class Post extends Model
         return $this->hasMany(Image::class);
     }
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
@@ -36,7 +36,7 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function favoris()
+    public function favorites()
     {
         return $this->hasMany(Favorite::class);
     }

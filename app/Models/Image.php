@@ -9,7 +9,8 @@ class Image extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'image_path'
+        'image_path',
+        'post_id',
     ];
     
     public function post()

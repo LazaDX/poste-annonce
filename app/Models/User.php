@@ -12,11 +12,16 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $fillable = [
-        'fisrt_name',
+        'first_name',
         'last_name',
         'email',
         'contact',
         'password',
+    ];
+    
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     public function posts()

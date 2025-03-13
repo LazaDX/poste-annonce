@@ -2,18 +2,24 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\FavoriteController;
+use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\Api\PostController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+Route::apiResource('users', UserController::class);
+Route::apiResource('admins', AdminController::class);
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('comments', CommentController::class);
+Route::apiResource('favorites', FavoriteController::class);
+Route::apiResource('images', ImageController::class);
+Route::apiResource('posts', PostController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::get('/users', [UserController::class, 'index']);      
+// Route::get('/users/{id}', [UserController::class, 'show']);  
+// Route::post('/users', [UserController::class, 'store']);     
+// Route::put('/users/{id}', [UserController::class, 'update']);
+// Route::delete('/users/{id}', [UserController::class, 'destroy']);
