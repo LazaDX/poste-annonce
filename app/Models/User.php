@@ -11,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    protected $table = 'users';
     protected $fillable = [
         'first_name',
         'last_name',
@@ -37,5 +38,15 @@ class User extends Authenticatable
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
+    }
+    
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

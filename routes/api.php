@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\AuthController;
 
 Route::apiResource('users', UserController::class);
 Route::apiResource('admins', AdminController::class);
@@ -18,8 +19,4 @@ Route::apiResource('favorites', FavoriteController::class);
 Route::apiResource('images', ImageController::class);
 Route::apiResource('posts', PostController::class);
 
-// Route::get('/users', [UserController::class, 'index']);      
-// Route::get('/users/{id}', [UserController::class, 'show']);  
-// Route::post('/users', [UserController::class, 'store']);     
-// Route::put('/users/{id}', [UserController::class, 'update']);
-// Route::delete('/users/{id}', [UserController::class, 'destroy']);
+Route::post('/auth/login', [AuthController::class, 'login']);
