@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('nombre_pieces');
             $table->string('nombre_couchages');
             $table->string('commodites');
+            $table->string('location');
+            $table->string('condition');
             $table->string('type_culture');
             $table->string('equipements');
             $table->string('type_exploitation');

@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
    // GET All api\images
     public function index()
     {
-        $images = Image::with('posts')->get();
+        $images = Image::with('post')->get();
 
         return response()->json($images);
     }
@@ -20,24 +20,30 @@ class ImageController extends Controller
     // POST api\images
     public function store(Request $request)
     {
+        // Validation des données
         $request->validate([
-            'image_path' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'post_id' => 'required|exists:posts,id',
         ]);
 
-        $imageName = time() . '.' . $request->image->extension();
+        // Vérification et traitement du fichier
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
 
-        $request->image->move(public_path('images'), $imageName);
+            // Création de l'entrée dans la base de données
+            $image = Image::create([
+                'image' => 'images/' . $imageName,
+                'post_id' => $request->post_id,
+            ]);
 
-        $image = Image::create([
-            'image_path' => 'images/' . $imageName,
-            'post_id' => $request->post_id,
-        ]);
+            return response()->json([
+                'message' => 'Image ajoutée avec succès',
+                'data' => $image,
+            ], 201);
+        }
 
-        return response()->json([
-            'message' => 'Image ajoutée avec succès',
-            'data' => $image,
-        ], 201);
+        return response()->json(['error' => 'Aucun fichier téléchargé.'], 400);
     }
 
     // GET api\images\{id}

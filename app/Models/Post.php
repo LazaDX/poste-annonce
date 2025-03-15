@@ -23,6 +23,8 @@ class Post extends Model
         'nombre_pieces',
         'nombre_couchages',
         'commodites',
+        'location',
+        'condition',
         'type_culture',
         'equipements',
         'type_exploitation',

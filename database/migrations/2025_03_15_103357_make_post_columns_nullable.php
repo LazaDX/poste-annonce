@@ -20,6 +20,8 @@ class MakePostColumnsNullable extends Migration
             $table->string('nombre_pieces')->nullable()->change();
             $table->string('nombre_couchages')->nullable()->change();
             $table->string('commodites')->nullable()->change();
+            $table->string('location')->nullable()->change();;
+            $table->string('condition')->nullable()->change();;
             $table->string('type_culture')->nullable()->change();
             $table->string('equipements')->nullable()->change();
             $table->string('type_exploitation')->nullable()->change();
@@ -41,6 +43,8 @@ class MakePostColumnsNullable extends Migration
             $table->string('nombre_pieces')->nullable(false)->change();
             $table->string('nombre_couchages')->nullable(false)->change();
             $table->string('commodites')->nullable(false)->change();
+            $table->string('location')->nullable(false)->change();
+            $table->string('condition')->nullable(false)->change();
             $table->string('type_culture')->nullable(false)->change();
             $table->string('equipements')->nullable(false)->change();
             $table->string('type_exploitation')->nullable(false)->change();
