@@ -11,9 +11,24 @@ class Post extends Model
     protected $fillable = [
         'title',
         'title_price',
+        'type',
+        'surface',
+        'city',
+        'phone',
+        'whatsapp',
+        'payment_method',
+        'moteur',
+        'nombre_etages',
+        'nombre_chambres',
+        'nombre_pieces',
+        'nombre_couchages',
+        'commodites',
+        'type_culture',
+        'equipements',
+        'type_exploitation',
         'description',
         'user_id',
-        'category_id'
+        'category_id',
     ];
 
     public function category()
