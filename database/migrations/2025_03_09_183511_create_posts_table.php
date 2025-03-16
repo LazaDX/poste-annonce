@@ -18,10 +18,12 @@ return new class extends Migration
             $table->string('phone');
             $table->string('whatsapp');
             $table->string('payment_method');
+            $table->string('vitesse');
             $table->string('moteur');
             $table->string('nombre_etages');
             $table->string('nombre_chambres');
             $table->string('nombre_pieces');
+            $table->string('type_activite');
             $table->string('nombre_couchages');
             $table->string('commodites');
             $table->string('location');

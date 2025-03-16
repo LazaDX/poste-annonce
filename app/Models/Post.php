@@ -17,10 +17,12 @@ class Post extends Model
         'phone',
         'whatsapp',
         'payment_method',
+        'vitesse', //
         'moteur',
         'nombre_etages',
         'nombre_chambres',
         'nombre_pieces',
+        'type_activite', //
         'nombre_couchages',
         'commodites',
         'location',

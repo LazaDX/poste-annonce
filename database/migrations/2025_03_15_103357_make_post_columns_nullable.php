@@ -14,10 +14,12 @@ class MakePostColumnsNullable extends Migration
             $table->string('phone')->nullable()->change();
             $table->string('whatsapp')->nullable()->change();
             $table->string('payment_method')->nullable()->change();
+            $table->string('vitesse')->nullable()->change();
             $table->string('moteur')->nullable()->change();
             $table->string('nombre_etages')->nullable()->change();
             $table->string('nombre_chambres')->nullable()->change();
             $table->string('nombre_pieces')->nullable()->change();
+            $table->string('type_activite')->nullable()->change();
             $table->string('nombre_couchages')->nullable()->change();
             $table->string('commodites')->nullable()->change();
             $table->string('location')->nullable()->change();;
@@ -37,10 +39,12 @@ class MakePostColumnsNullable extends Migration
             $table->string('phone')->nullable(false)->change();
             $table->string('whatsapp')->nullable(false)->change();
             $table->string('payment_method')->nullable(false)->change();
+            $table->string('vitesse')->nullable(false)->change();
             $table->string('moteur')->nullable(false)->change();
             $table->string('nombre_etages')->nullable(false)->change();
             $table->string('nombre_chambres')->nullable(false)->change();
             $table->string('nombre_pieces')->nullable(false)->change();
+            $table->string('type_activite')->nullable(false)->change();
             $table->string('nombre_couchages')->nullable(false)->change();
             $table->string('commodites')->nullable(false)->change();
             $table->string('location')->nullable(false)->change();
