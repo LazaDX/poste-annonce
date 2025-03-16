@@ -79,7 +79,7 @@ class PostController extends Controller
     // GET api\posts\{id}
     public function show(string $id)
     {
-        $post = Post::with(['user', 'category', 'comment', 'favoris', 'image'])->find($id);
+        $post = Post::with(['user', 'category', 'comments', 'favorites', 'images'])->find($id);
 
         if (!$post) {
             return response()->json(['message' => 'Annonce non trouvée'], 404);

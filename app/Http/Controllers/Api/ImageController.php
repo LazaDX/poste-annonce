@@ -67,18 +67,23 @@ class ImageController extends Controller
             return response()->json(['message' => 'Image non trouvée'], 404);
         }
 
+        // Validation des données
         $request->validate([
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        if (Storage::disk('public')->exists($image->image_path)) {
-            Storage::disk('public')->delete($image->image_path);
+        // Vérification et suppression de l'ancien fichier
+        if (file_exists(public_path($image->image))) {
+            unlink(public_path($image->image));
         }
 
-        $path = $request->file('image')->store('images', 'public');
+        // Traitement du nouveau fichier
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $imageName);
 
+        // Mise à jour de l'entrée dans la base de données
         $image->update([
-            'image_path' => $path,
+            'image' => 'images/' . $imageName,
         ]);
 
         return response()->json([
@@ -89,17 +94,22 @@ class ImageController extends Controller
 
     // DELETE api\images\{id}
     public function destroy(string $id)
-    {
-        $image = Image::find($id);
+{
+    $image = Image::find($id);
 
-        if (!$image) {
-            return response()->json(['message' => 'Image non trouvée'], 404);
-        }
-
-        if (Storage::disk('public')->exists($image->image_path)) {
-            Storage::disk('public')->delete($image->image_path);
-        }
-
-        $image->delete();
+    if (!$image) {
+        return response()->json(['message' => 'Image non trouvée'], 404);
     }
+
+    // Suppression de l'image physique dans le dossier public/images
+    if (file_exists(public_path($image->image))) {
+        unlink(public_path($image->image));
+    }
+
+    // Suppression dans la BDD
+    $image->delete();
+
+    return response()->json(['message' => 'Image supprimée avec succès']);
+}
+
 }
