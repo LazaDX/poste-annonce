@@ -17,9 +17,10 @@ class User extends Authenticatable
         'last_name',
         'email',
         'contact',
+        'profile_image',
         'password',
     ];
-    
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -39,7 +40,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Favorite::class);
     }
-    
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

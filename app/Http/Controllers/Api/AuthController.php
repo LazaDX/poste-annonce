@@ -40,10 +40,11 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Pour la déconnexion, tu peux utiliser le guard qui est connecté
-        Auth::guard('web')->logout();
-        Auth::guard('admin')->logout();
-
+        if (Auth::guard('admin')->check()) {
+            Auth::guard('admin')->logout();
+        } else {
+            Auth::guard('web')->logout();
+        }
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

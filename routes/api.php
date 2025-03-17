@@ -20,3 +20,4 @@ Route::apiResource('images', ImageController::class);
 Route::apiResource('posts', PostController::class);
 
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/logout', [AuthController::class, 'logout']);
