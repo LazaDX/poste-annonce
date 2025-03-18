@@ -174,4 +174,10 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Annonce supprimée avec succès !']);
     }
+
+    public function getTotalPosts()
+    {
+        $totalPosts = Post::count();
+        return response()->json(['totalPosts' => $totalPosts]);
+    }
 }

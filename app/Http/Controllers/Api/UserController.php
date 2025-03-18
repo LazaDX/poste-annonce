@@ -46,7 +46,7 @@ class UserController extends Controller
     // Get User by Id
     public function show(string $id)
     {
-        $user = User::find($id);
+        $user = User::withCount('posts')->find($id);
         if(!$user) {
             return response()->json(['message' => 'Utilisateur non trouvé']);
         }
@@ -118,5 +118,11 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'Utilisateur supprimé']);
+    }
+
+    public function getTotalUsers()
+    {
+        $totalUsers = User::count();
+        return response()->json(['totalUsers' => $totalUsers]);
     }
 }
