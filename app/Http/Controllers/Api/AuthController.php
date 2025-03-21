@@ -10,44 +10,71 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Valider les données envoyées
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        // Tenter l'authentification pour l'admin
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
+
             return response()->json([
                 'message' => 'Connexion admin réussie',
                 'admin'   => Auth::guard('admin')->user(),
             ]);
         }
-        // Sinon, tenter l'authentification pour l'utilisateur
+
         elseif (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
+            $this->incrementVisitCount();
+
             return response()->json([
                 'message' => 'Connexion utilisateur réussie',
                 'user'    => Auth::guard('web')->user(),
             ]);
         }
-        // Si aucun n'a fonctionné
+
         else {
             return response()->json(['message' => 'Identifiants invalides'], 401);
         }
+    }
+
+    private function incrementVisitCount()
+    {
+        // $visit = Visit::firstOrCreate(['id' => 1], ['count' => 0]);
+        // $visit->increment('count');
+        $filePath = storage_path('app/visits.txt');
+        $count = (int) file_get_contents($filePath);
+        $count++;
+        file_put_contents($filePath, $count);
+    }
+
+    public function getVisitCount()
+    {
+        // $visit = Visit::first();
+        // return response()->json(['visitCount' => $visit ? $visit->count : 0]);
+        $filePath = storage_path('app/visits.txt');
+        $count = (int) file_get_contents($filePath);
+        return response()->json(['visitCount' => $count]);
     }
 
     public function logout(Request $request)
     {
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
-        } else {
+        }
+
+        if(Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Déconnexion réussie']);
     }
+
+
+
+
 }

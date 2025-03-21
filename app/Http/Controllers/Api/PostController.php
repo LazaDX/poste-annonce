@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -179,5 +180,19 @@ class PostController extends Controller
     {
         $totalPosts = Post::count();
         return response()->json(['totalPosts' => $totalPosts]);
+    }
+
+    public function getPostsByMonth()
+    {
+        $postsByMonth = DB::table('posts')
+        ->selectRaw('EXTRACT(MONTH FROM created_at) AS month, COUNT(*) AS count')
+        ->groupByRaw('EXTRACT(MONTH FROM created_at)')
+        ->orderBy('month', 'asc')
+        ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $postsByMonth
+        ], 200);
     }
 }

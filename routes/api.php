@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\AuthController;
 
 Route::get('/users/count', [UserController::class, 'getTotalUsers']);
+Route::get('/users/by-month', [UserController::class, 'getUsersByMonth']);
 Route::apiResource('users', UserController::class);
 Route::apiResource('admins', AdminController::class);
 Route::apiResource('categories', CategoryController::class);
@@ -19,8 +20,9 @@ Route::apiResource('comments', CommentController::class);
 Route::apiResource('favorites', FavoriteController::class);
 Route::apiResource('images', ImageController::class);
 Route::get('/posts/count', [PostController::class, 'getTotalPosts']);
+Route::get('/posts/by-month', [PostController::class, 'getPostsByMonth']);
 Route::apiResource('posts', PostController::class);
-
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/visits/count', [AuthController::class, 'getVisitCount']);
 Route::post('/auth/logout', [AuthController::class, 'logout']);
 
