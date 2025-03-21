@@ -18,6 +18,9 @@ Route::apiResource('admins', AdminController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('comments', CommentController::class);
 Route::apiResource('favorites', FavoriteController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user/favorites/posts', [FavoriteController::class, 'getUserFavoritesPosts']);
+});
 Route::apiResource('images', ImageController::class);
 Route::get('/posts/count', [PostController::class, 'getTotalPosts']);
 Route::get('/posts/by-month', [PostController::class, 'getPostsByMonth']);

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class FavoriteController extends Controller
 {
-    
+
     public function index()
     {
         $favorites = Favorite::with(['user', 'post'])->get();
@@ -102,4 +102,49 @@ class FavoriteController extends Controller
 
         return response()->json(['message' => 'Favori supprimé avec succès']);
     }
+
+    public function getUserFavoritesPosts(Request $request)
+    {
+        // Récupérer l'utilisateur connecté
+        $user = auth()->user();
+
+        // Vérification : utilisateur connecté ?
+        if (!$user) {
+            return response()->json(['message' => 'Non autorisé'], 401);
+        }
+
+        // Récupérer les favoris de l'utilisateur AVEC les annonces (posts)
+        $favoritesPosts = Favorite::with('post')
+                            ->where('user_id', $user->id)
+                            ->get()
+                            ->pluck('post') // On récupère uniquement les posts
+                            ->filter();     // Supprime les valeurs nulles si jamais
+
+        // Retourner les posts favoris
+        return response()->json([
+            'posts' => $favoritesPosts
+        ]);
+    }
+
+    // public function getUserFavoritesPosts(Request $request)
+    // {
+    //     // Récupérer l'utilisateur connecté
+    //     $user = auth()->user();
+
+    //     // Vérification : utilisateur connecté ?
+    //     if (!$user) {
+    //         return response()->json(['message' => 'Non autorisé'], 401);
+    //     }
+
+    //     // Récupérer les favoris de l'utilisateur AVEC les annonces (posts)
+    //     $favorites = Favorite::with('post')
+    //                         ->where('user_id', $user->id)
+    //                         ->get();
+
+    //     // Retourner les favoris avec leurs IDs et les détails des posts
+    //     return response()->json([
+    //         'favorites' => $favorites
+    //     ]);
+    // }
+
 }
