@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -17,7 +19,7 @@ class AdminController extends Controller
         return response()->json($admins);
     }
 
-   // Post 
+   // Post
     public function store(Request $request)
     {
         $request->validate([
@@ -33,7 +35,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-       
+
         return response()->json([
             'message' => 'Adminitrateur crée avec succès !',
             'data' => $admin
@@ -47,7 +49,7 @@ class AdminController extends Controller
         if(!$admin) {
             return response()->json(['message' => 'Administrateur non trouvé']);
         }
-        
+
         return response()->json($admin);
     }
 
@@ -69,13 +71,38 @@ class AdminController extends Controller
         return response()->json($admin);
     }
 
-    // Delete 
+    // Delete
     public function destroy(string $id)
     {
         $admin = Admin::findOrFail($id);
-      
+
         $admin->delete();
 
         return response()->json(['message' => 'Administrateur supprimé']);
+    }
+
+    public function getOnlineUsers()
+    {
+        $users = User::where('is_online', true)->get();
+
+        return response()->json([
+            'online_users' => $users
+        ]);
+    }
+
+    public function getNewUsers()
+    {
+        // Aujourd'hui
+        $today = Carbon::today();
+
+        // Hier
+        $yesterday = Carbon::yesterday();
+
+        // Récupérer les utilisateurs inscrits hier et aujourd'hui
+        $users = User::whereDate('created_at', $today)
+                    ->orWhereDate('created_at', $yesterday)
+                    ->get();
+
+        return response()->json($users);
     }
 }

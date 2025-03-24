@@ -26,11 +26,14 @@ class AuthController extends Controller
 
         elseif (Auth::guard('web')->attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::guard('web')->user();
+            $user->is_online = true;
+            $user->save();
             $this->incrementVisitCount();
 
             return response()->json([
                 'message' => 'Connexion utilisateur réussie',
-                'user'    => Auth::guard('web')->user(),
+                'user'    => $user,
             ]);
         }
 
@@ -62,16 +65,24 @@ class AuthController extends Controller
     {
         if (Auth::guard('admin')->check()) {
             Auth::guard('admin')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return response()->json(['message' => 'Déconnexion admin réussie']);
         }
 
         if(Auth::guard('web')->check()) {
+
+            $user = Auth::guard('web')->user();
+            $user->is_online = false;
+            $user->save();
+
             Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return response()->json(['message' => 'Déconnexion admin réussie']);
         }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return response()->json(['message' => 'Déconnexion réussie']);
+        return response()->json(['message' => 'Aucun utilisateur connecté']);
     }
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
@@ -147,4 +148,21 @@ class FavoriteController extends Controller
     //     ]);
     // }
 
+    public function removeByPost($postId)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        }
+
+        $deleted = Favorite::where('user_id', $user->id)
+                           ->where('post_id', $postId)
+                           ->delete();
+
+        if ($deleted) {
+            return response()->json(['message' => 'Favori supprimé avec succès']);
+        } else {
+            return response()->json(['message' => 'Favori non trouvé'], 404);
+        }
+    }
 }

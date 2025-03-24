@@ -26,6 +26,7 @@ class UserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'contact' => 'required|string|max:10',
+            'localisation' => 'required|string|max:255',
             'password' => 'required|min:6',
         ]);
 
@@ -34,6 +35,7 @@ class UserController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'contact' => $request->contact,
+            'localisation' => $request->localisation,
             'password' => Hash::make($request->password),
         ]);
 
@@ -55,49 +57,56 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    // Put User by Id
+
     public function update(Request $request, string $id)
     {
         try {
-            // Recherche de l'utilisateur
+            // 1. Recherche de l'utilisateur
             $user = User::find($id);
+
             if (!$user) {
                 return response()->json(['message' => 'Utilisateur non trouvé'], 404);
             }
 
-            // Validation des données
+            // 2. Validation des données
             $validatedData = $request->validate([
                 'first_name'    => 'sometimes|required|string|max:255',
                 'last_name'     => 'sometimes|required|string|max:255',
                 'email'         => 'sometimes|required|email|unique:users,email,' . $user->id,
-                'contact'       => 'sometimes|required|string|max:10',
+                'contact'       => 'sometimes|required|string|max:15', // Au cas où le numéro est plus long
+                'localisation'  => 'sometimes|required|string|max:255',
                 'password'      => 'sometimes|required|min:6',
-                'profile_image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048',
+                'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
-            if ($request->hasFile('profile_image')) {
-                $file = $request->file('profile_image');
-                if ($file->isValid()) {
-
-                    $imageName = time() . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('images'), $imageName);
-                    $validatedData['profile_image'] = 'images/' . $imageName; // Mettre à jour le chemin de l'image
-                } else {
-                    return response()->json(['message' => 'Fichier invalide'], 400);
-                }
-            }
-
+            // 3. Gestion du mot de passe
             if (!empty($validatedData['password'])) {
                 $validatedData['password'] = Hash::make($validatedData['password']);
             }
 
+            // 4. Gestion de l'image de profil
+            if ($request->hasFile('profile_image')) {
+                $file = $request->file('profile_image');
+
+                if ($file->isValid()) {
+                    $imageName = time() . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('images'), $imageName);
+
+                    // Ici, on met à jour directement l'utilisateur avec le chemin de l'image
+                    $validatedData['profile_image'] = 'images/' . $imageName;
+                } else {
+                    return response()->json(['message' => 'Fichier image invalide'], 400);
+                }
+            }
+
+            // 5. Mise à jour des données utilisateur
             $user->update($validatedData);
-            $user = User::find($id);  //
 
             return response()->json([
                 'message' => 'Utilisateur mis à jour avec succès',
                 'data' => $user
-            ]);
+            ], 200);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Erreur de validation',
@@ -110,6 +119,7 @@ class UserController extends Controller
             ], 500);
         }
     }
+
     // Delete
     public function destroy(string $id)
     {

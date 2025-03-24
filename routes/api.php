@@ -13,14 +13,17 @@ use App\Http\Controllers\Api\AuthController;
 
 Route::get('/users/count', [UserController::class, 'getTotalUsers']);
 Route::get('/users/by-month', [UserController::class, 'getUsersByMonth']);
-Route::apiResource('users', UserController::class);
 Route::apiResource('admins', AdminController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/favorites/post/{postId}', [FavoriteController::class, 'removeByPost']);
+    Route::get('/user/favorites/posts', [FavoriteController::class, 'getUserFavoritesPosts']);
+    Route::get('/users/online', [AdminController::class, 'getOnlineUsers']);
+});
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('comments', CommentController::class);
 Route::apiResource('favorites', FavoriteController::class);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user/favorites/posts', [FavoriteController::class, 'getUserFavoritesPosts']);
-});
+Route::get('/admin/new-users', [AdminController::class, 'getNewUsers']);
+Route::apiResource('users', UserController::class);
 Route::apiResource('images', ImageController::class);
 Route::get('/posts/count', [PostController::class, 'getTotalPosts']);
 Route::get('/posts/by-month', [PostController::class, 'getPostsByMonth']);
