@@ -46,10 +46,16 @@ class AuthController extends Controller
     {
         // $visit = Visit::firstOrCreate(['id' => 1], ['count' => 0]);
         // $visit->increment('count');
-        $filePath = storage_path('app/visits.txt');
-        $count = (int) file_get_contents($filePath);
+        $path = storage_path('app/visits.txt');
+
+        if (!file_exists($path)) {
+            file_put_contents($path, 0);
+        }
+
+        $count = (int) file_get_contents($path);
         $count++;
-        file_put_contents($filePath, $count);
+
+        file_put_contents($path, $count);
     }
 
     public function getVisitCount()

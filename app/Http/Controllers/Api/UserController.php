@@ -21,22 +21,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
+       $validated = $request->validate([
            'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'contact' => 'required|string|max:10',
-            'localisation' => 'required|string|max:255',
+            'localisation' => 'nullable|string|max:255',
             'password' => 'required|min:6',
         ]);
 
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'contact' => $request->contact,
-            'localisation' => $request->localisation,
-            'password' => Hash::make($request->password),
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'contact' => $validated['contact'],
+            'localisation' => $validated['localisation'] ?? 'Non spécifiée',
+            'password' => Hash::make($validated['password']),
         ]);
 
         return response()->json([
